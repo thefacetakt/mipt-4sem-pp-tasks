@@ -19,11 +19,9 @@ struct NormalStruct {
 
 NormalStruct ns;
 
-void f(int *x) {
-    int &a = *x;
+void f(int &x) {
     for (int i = 0; i < 1000 * 1000 * 1000; ++i) {
-        a = (1289732 * a + 19238);
-        // ++(*x);
+        x = (1289732 * x + 19238);
     }
 }
 
@@ -34,9 +32,9 @@ int main() {
     start = std::chrono::system_clock::now();
     for (size_t index = 0; index < 2; ++index) {
         if (index == 0) {
-            threads.push_back(std::thread(f, &ns.a));
+            threads.push_back(std::thread(f, std::ref(ns.a)));
         } else {
-            threads.push_back(std::thread(f, &ns.b));
+            threads.push_back(std::thread(f, std::ref(ns.b)));
         }
     }
     for (size_t index = 0; index < 2; ++index) {
